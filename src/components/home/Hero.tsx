@@ -26,7 +26,7 @@ export function Hero() {
             transition={{ duration: 0.6 }}
             className="text-primary uppercase tracking-[0.3em] text-sm font-medium mb-6"
           >
-            Artisanal Perfumery
+            Elvobz Space
           </motion.p>
 
           <motion.h1
@@ -35,10 +35,10 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="font-display text-5xl md:text-7xl font-semibold leading-tight mb-6"
           >
-            Where Scent{' '}
-            <span className="text-gradient-gold italic">Becomes</span>
+            Ketika Aroma{' '}
+            <span className="text-gradient-gold italic">Menjadi</span>
             <br />
-            Your Signature
+            Identitas Anda
           </motion.h1>
 
           <motion.p
@@ -47,8 +47,9 @@ export function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-lg text-foreground/70 leading-relaxed mb-10 max-w-lg"
           >
-            Discover our collection of handcrafted fragrances, each bottle 
-            containing a story of rare ingredients and masterful composition.
+            Temukan koleksi parfum eksklusif kami—dirancang dengan bahan pilihan
+            dan komposisi berkelas untuk mencerminkan karakter, emosi, dan
+            kepribadian Anda
           </motion.p>
 
           <motion.div
@@ -59,13 +60,13 @@ export function Hero() {
           >
             <Link to="/products">
               <Button size="lg" className="bg-gradient-gold text-primary-foreground hover:opacity-90 group">
-                Explore Collection
+                Jelajahi Koleksi
                 <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
             <Link to="/custom-parfume">
               <Button size="lg" variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
-                Create Your Scent
+                Ciptakan Aroma Anda Sendiri
               </Button>
             </Link>
           </motion.div>
