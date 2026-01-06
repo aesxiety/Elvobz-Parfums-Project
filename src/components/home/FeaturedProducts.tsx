@@ -9,24 +9,24 @@ import product3 from '@/assets/product-3.jpg';
 const featuredProducts = [
   {
     id: 1,
-    name: 'Amber Essence',
-    price: 2450000,
+    name: 'Amor Fati',
+    price: 110000,
     image: product1,
-    notes: ['Amber', 'Vanilla', 'Sandalwood'],
+    notes: ['Pink Pepper', 'Litchi', 'Bergamot'],
   },
   {
     id: 2,
-    name: 'Rose Nocturne',
-    price: 1950000,
+    name: 'Evolve',
+    price: 110000,
     image: product2,
-    notes: ['Damascus Rose', 'Oud', 'Musk'],
+    notes: ['Blackberry', 'Neroli', 'Apple'],
   },
   {
     id: 3,
-    name: 'Oud Royale',
-    price: 3250000,
+    name: 'Spartanz',
+    price: 110000,
     image: product3,
-    notes: ['Oud', 'Saffron', 'Leather'],
+    notes: ['Bergamot', 'Blackcurrant', 'Apple'],
   },
 ];
 
@@ -53,10 +53,10 @@ export function FeaturedProducts() {
             Signature Collection
           </p>
           <h2 className="font-display text-4xl md:text-5xl font-semibold mb-4">
-            Curated Elegance
+            Essential Elegance
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto">
-            Our most beloved creations, each a testament to the art of fine perfumery.
+            Parfum pilihan yang mendefinisikan karakter dan gaya personal
           </p>
         </motion.div>
 

@@ -7,18 +7,18 @@ import aboutImage from '@/assets/about-brand.jpg';
 const features = [
   {
     icon: Sparkles,
-    title: 'Personal Consultation',
-    description: 'One-on-one session with our master perfumer',
+    title: 'Konsultasi Personal',
+    description: 'Sesi privat satu-satu bersama perfumer kami',
   },
   {
     icon: Palette,
-    title: 'Custom Formula',
-    description: 'A fragrance uniquely crafted for you',
+    title: 'Formula Eksklusif',
+    description: 'Aroma yang dirancang khusus sesuai karakter Anda',
   },
   {
     icon: Calendar,
     title: 'By Appointment',
-    description: 'Exclusive sessions in our Jakarta atelier',
+    description: 'Sesi eksklusif di atelier kami di Paser',
   },
 ];
 
@@ -37,7 +37,7 @@ export function BespokeSection() {
             <div className="aspect-[4/5] overflow-hidden rounded-sm">
               <img
                 src={aboutImage}
-                alt="Master perfumer at work"
+                alt="Proses peracikan parfum eksklusif"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -53,17 +53,17 @@ export function BespokeSection() {
             className="lg:pl-8"
           >
             <p className="text-primary uppercase tracking-[0.3em] text-sm font-medium mb-4">
-              Bespoke Experience
+              Pengalaman Aroma Eksklusif
             </p>
             <h2 className="font-display text-4xl md:text-5xl font-semibold mb-6">
-              Create Your
+              Ciptakan
               <br />
-              <span className="text-gradient-gold italic">Signature Scent</span>
+              <span className="text-gradient-gold italic">Signature Scent Anda</span>
             </h2>
             <p className="text-muted-foreground leading-relaxed mb-8">
-              Embark on an intimate journey of olfactory discovery. Our master perfumer 
-              will guide you through an exclusive consultation to craft a fragrance 
-              that captures your essence, memories, and aspirations.
+              Mulailah perjalanan intim dalam menemukan aroma yang merepresentasikan
+              diri Anda. Perfumer kami akan memandu sesi konsultasi eksklusif untuk
+              meracik parfum yang mencerminkan karakter, memori, dan aspirasi Anda.
             </p>
 
             {/* Features */}
@@ -90,7 +90,7 @@ export function BespokeSection() {
 
             <Link to="/custom-parfume">
               <Button size="lg" className="bg-gradient-gold text-primary-foreground hover:opacity-90">
-                Book Your Consultation
+                 Reservasi Sesi Konsultasi
               </Button>
             </Link>
           </motion.div>
