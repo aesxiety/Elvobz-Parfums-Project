@@ -2,7 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import heroImage from '@/assets/hero-perfume.jpg';
+import heroImage from '@/assets/main-hero-image.png';
 
 export function Hero() {
   return (

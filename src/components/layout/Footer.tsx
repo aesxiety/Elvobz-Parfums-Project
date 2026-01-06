@@ -9,7 +9,7 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <h3 className="font-display text-2xl font-semibold text-gradient-gold">
-              MAISON ÉLIXIR
+              Elvobz Parfums
             </h3>
             <p className="text-muted-foreground text-sm leading-relaxed">
               Crafting bespoke fragrances that tell your unique story. 
@@ -58,7 +58,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center space-x-3 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4 text-primary" />
-                <span>Jakarta, Indonesia</span>
+                <span>Paser, Indonesia</span>
               </li>
               <li className="flex items-center space-x-3 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4 text-primary" />
@@ -66,7 +66,7 @@ export function Footer() {
               </li>
               <li className="flex items-center space-x-3 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4 text-primary" />
-                <span>hello@maisonelixir.com</span>
+                <span>ElvobsParfums@gmail.com</span>
               </li>
             </ul>
           </div>
@@ -84,7 +84,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-border text-center">
           <p className="text-sm text-muted-foreground">
-            © 2024 Maison Élixir. All rights reserved. Crafted with passion.
+            © 2024 Elvobz Parfums. All rights reserved. Crafted with passion.
           </p>
         </div>
       </div>
