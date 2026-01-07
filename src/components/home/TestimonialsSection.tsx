@@ -8,7 +8,7 @@ const testimonials = [
   {
     id: 1,
     name: 'Sarah Wijaya',
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    videoUrl: 'https://www.instagram.com/s/aGlnaGxpZ2h0OjE4MDI0NDcxNzU1NjU3ODU2?story_media_id=3596568827034841227_70560378555&igsh=eXd1cnl5a3czOWE3',
     thumbnailUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop',
     quote: 'The custom perfume they created for me is absolutely divine. It\'s become my signature scent.',
     rating: 5,
