@@ -1,73 +1,77 @@
-# Welcome to your Lovable project
+# Elvobz Parfums — Admin Dashboard
 
-## Project info
+A lightweight admin dashboard for managing reservations and users in the Elvobz Parfums project.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## Quick Start
 
-## How can I edit this code?
+Prerequisites: Node.js (LTS) and npm or bun.
 
-There are several ways of editing your application.
+```bash
+# Clone the repository
+git clone https://github.com/aesxiety/Elvobz-Parfums-Project.git
+cd Elvobz-Parfums-Project
 
-**Use Lovable**
+# Install dependencies
+npm install
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Notes:
+- If you use `nvm`, install Node via the nvm instructions: https://github.com/nvm-sh/nvm#installing-and-updating
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Development
 
-**Use GitHub Codespaces**
+- The app is built with Vite + React + TypeScript.
+- UI components come from shadcn/ui and Tailwind CSS is used for styling.
+- Source code lives under the `src/` directory.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Useful scripts (from package.json):
 
-## What technologies are used for this project?
+```bash
+# Start dev server
+npm run dev
 
-This project is built with:
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## Project Structure (important files)
+
+- `src/main.tsx` — app entry
+- `src/App.tsx` — top-level app component
+- `src/pages/Admin.tsx` — Admin dashboard (reservations & users)
+- `src/integrations/supabase/client.ts` — Supabase client config
+- `src/components/` — shared UI components
+
+## Technologies
 
 - Vite
 - TypeScript
 - React
-- shadcn-ui
 - Tailwind CSS
+- shadcn-ui
+- Supabase (Postgres + Auth)
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
 
-## Can I connect a custom domain to my Lovable project?
+## Contributing
 
-Yes, you can!
+- Open an issue or submit a pull request.
+- Keep changes focused and add tests where applicable.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Troubleshooting
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+- If you see type errors when interacting with Supabase, check your generated types and adjust queries to the Postgrest client API 
+
+## Contact / Links
+
+- Instagram Elvobz : https://instagram.com/
+
+---
+
+
