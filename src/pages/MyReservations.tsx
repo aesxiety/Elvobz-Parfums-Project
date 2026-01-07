@@ -136,8 +136,8 @@ export default function MyReservations() {
                           Booked on {new Date(reservation.created_at).toLocaleDateString()}
                         </p>
                       </div>
-                      <Badge className={`${status.color} border-0 flex items-center gap-1`}>
-                        <StatusIcon className="h-3 w-3" />
+                      <Badge className={`${status.color} border-0 flex items-center gap-1 w-fit`}>
+                        <StatusIcon className="h-3 w-3 " />
                         {status.label}
                       </Badge>
                     </div>

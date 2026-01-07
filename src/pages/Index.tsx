@@ -6,7 +6,7 @@ import { TestimonialsSection } from '@/components/home/TestimonialsSection';
 
 const Index = () => {
   return (
-    <Layout>
+    <Layout >
       <Hero />
       <FeaturedProducts />
       <BespokeSection />

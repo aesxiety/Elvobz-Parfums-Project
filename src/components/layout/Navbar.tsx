@@ -10,6 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuLabel,
+  DropdownMenuGroup
 } from '@/components/ui/dropdown-menu';
 
 const navLinks = [
@@ -24,7 +26,7 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
-
+  // console.log(user)
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -44,11 +46,10 @@ export function Navbar() {
               <Link
                 key={link.href}
                 to={link.href}
-                className={`text-sm font-medium tracking-wide uppercase transition-colors duration-300 ${
-                  isActive(link.href)
+                className={`text-sm font-medium tracking-wide uppercase transition-colors duration-300 ${isActive(link.href)
                     ? 'text-primary'
                     : 'text-foreground/70 hover:text-primary'
-                }`}
+                  }`}
               >
                 {link.label}
               </Link>
@@ -65,23 +66,36 @@ export function Navbar() {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48 bg-card border-border">
-                  <DropdownMenuItem className="text-muted-foreground">
+                  <DropdownMenuLabel className="text-muted-foreground text-wrap">
                     {user.email}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  {isAdmin && (
+                  </DropdownMenuLabel>
+                  <DropdownMenuGroup>
+
+                      <DropdownMenuItem asChild>
+                        <Link to="/profile" className="flex items-center">
+                          <User className="mr-2 h-4 w-4" />
+                          Profile
+                        </Link>
+                      </DropdownMenuItem>
+
+                    {isAdmin && (
+                      <DropdownMenuItem asChild>
+                        <Link to="/admin" className="flex items-center">
+                          <Settings className="mr-2 h-4 w-4" />
+                          Admin Panel
+                        </Link>
+                      </DropdownMenuItem>
+                    )}
                     <DropdownMenuItem asChild>
-                      <Link to="/admin" className="flex items-center">
-                        <Settings className="mr-2 h-4 w-4" />
-                        Admin Panel
-                      </Link>
+                      {!isAdmin && (
+                        <Link to="/my-reservations" className="flex items-center">
+                          My Reservations
+
+                        </Link>
+
+                      )}
                     </DropdownMenuItem>
-                  )}
-                  <DropdownMenuItem asChild>
-                    <Link to="/my-reservations" className="flex items-center">
-                      My Reservations
-                    </Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={signOut} className="text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
@@ -123,24 +137,28 @@ export function Navbar() {
                   key={link.href}
                   to={link.href}
                   onClick={() => setIsOpen(false)}
-                  className={`block text-lg font-medium tracking-wide ${
-                    isActive(link.href)
+                  className={`block text-lg font-medium tracking-wide ${isActive(link.href)
                       ? 'text-primary'
                       : 'text-foreground/70'
-                  }`}
+                    }`}
                 >
                   {link.label}
                 </Link>
               ))}
               <div className="pt-4 border-t border-border">
                 {user ? (
-                  <div className="space-y-3">
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                  <div className="space-y-2">
+                    <p className="text-sm text-muted-foreground mb-4">{user.email}</p>
                     {isAdmin && (
                       <Link to="/admin" onClick={() => setIsOpen(false)}>
                         <Button variant="outline" className="w-full">Admin Panel</Button>
                       </Link>
                     )}
+                    <Link to="/profile" className="flex items-center">
+                      <Button variant='outline' className='w-full'>Profile</Button>
+                      
+                    </Link>
+
                     <Button onClick={signOut} variant="ghost" className="w-full text-destructive">
                       Sign Out
                     </Button>

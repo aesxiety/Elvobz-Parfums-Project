@@ -13,6 +13,8 @@ import CustomParfume from "./pages/CustomParfume";
 import MyReservations from "./pages/MyReservations";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +33,15 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/custom-parfume" element={<CustomParfume />} />
             <Route path="/my-reservations" element={<MyReservations />} />
-            <Route path="/admin" element={<Admin />} />
+             <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute requireAdmin>
+                    <Admin />
+                  </ProtectedRoute>
+                } 
+            />
+            <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

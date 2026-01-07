@@ -75,9 +75,8 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="font-display text-lg font-medium text-foreground">Atelier Hours</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Monday - Friday: 10:00 - 19:00</li>
-              <li>Saturday: 10:00 - 17:00</li>
-              <li>Sunday: By Appointment</li>
+              <li>Tuesday - Wednesday: 19:00 - 22:00 </li>
+              <li>Saturday: 09:00 - 22:00</li>
             </ul>
           </div>
         </div>
