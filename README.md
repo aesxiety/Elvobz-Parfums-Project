@@ -16,7 +16,14 @@ npm install
 
 # Start development server
 npm run dev
+
+## Environment Setup
+
 ```
+Create a `.env.local` file in the project root with the following `.env.example`
+
+Get these values from your Supabase project settings at https://app.supabase.com.
+
 
 Notes:
 - If you use `nvm`, install Node via the nvm instructions: https://github.com/nvm-sh/nvm#installing-and-updating
