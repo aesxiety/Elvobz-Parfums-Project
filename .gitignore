@@ -1,4 +1,6 @@
+# =========================
 # Logs
+# =========================
 logs
 *.log
 npm-debug.log*
@@ -7,16 +9,42 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
+# =========================
+# Dependencies
+# =========================
+node_modules/
+
+# =========================
+# Build outputs
+# =========================
+dist/
+dist-ssr/
+
+# =========================
+# Environment variables (IMPORTANT)
+# =========================
 .env
-.env.dev
-# Editor directories and files
+.env.*
+!.env.example
+
+# Supabase
+supabase/.env
+config.toml
+*.toml
+
+# =========================
+# Local & cache
+# =========================
+*.local
+.vite/
+.cache/
+
+# =========================
+# Editor / OS
+# =========================
 .vscode/*
 !.vscode/extensions.json
-.idea
+.idea/
 .DS_Store
 *.suo
 *.ntvs*

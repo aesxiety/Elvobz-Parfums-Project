@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
-const WHATSAPP_NUMBER = '6281234567890'; // Replace with actual WhatsApp number
+const WHATSAPP_NUMBER = '6285172272514'; // Replace with actual WhatsApp number
 
 export default function Contact() {
   const { toast } = useToast();

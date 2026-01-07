@@ -78,7 +78,7 @@ export default function Auth() {
     } else {
       toast({
         title: 'Account created',
-        description: 'Welcome to Maison Élixir!',
+        description: 'Welcome to Elvobz Space!',
       });
       navigate('/');
     }
