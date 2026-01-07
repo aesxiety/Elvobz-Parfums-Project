@@ -29,6 +29,11 @@ export function Navbar() {
   // console.log(user)
   const isActive = (path: string) => location.pathname === path;
 
+  const handleLogout = async() => {
+    await signOut();
+    setIsOpen(false);
+    window.location.href = '/auth';
+  }
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 glass-card">
       <div className="container mx-auto px-4 lg:px-8">
@@ -97,7 +102,7 @@ export function Navbar() {
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={signOut} className="text-destructive">
+                  <DropdownMenuItem onClick={() => handleLogout()} className="text-destructive">
                     <LogOut className="mr-2 h-4 w-4" />
                     Sign Out
                   </DropdownMenuItem>
@@ -159,7 +164,7 @@ export function Navbar() {
                       
                     </Link>
 
-                    <Button onClick={signOut} variant="ghost" className="w-full text-destructive">
+                    <Button onClick={handleLogout} variant="ghost" className="w-full text-destructive">
                       Sign Out
                     </Button>
                   </div>

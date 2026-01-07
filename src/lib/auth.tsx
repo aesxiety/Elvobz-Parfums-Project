@@ -9,7 +9,7 @@ interface AuthContextType {
   isLoading: boolean;
   signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signOut: () => Promise<void>;
+  signOut: () => Promise<{ error: Error | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -36,12 +36,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
+      
         if (session?.user) {
-          setTimeout(() => {
-            checkAdminRole(session.user.id);
-          }, 0);
+          checkAdminRole(session.user.id);
+          // setTimeout(() => {
+          // }, 0);
+           const intervalId = setInterval(async () => {
+            try {
+              const { data, error } = await supabase
+                .from('profiles')
+                .select('id')
+                .eq('id', session.user.id)
+                .single();
+
+              if (error && error.code === 'PGRST116') {
+          
+                clearInterval(intervalId);
+                await supabase.auth.signOut();
+                window.location.href = '/auth';
+              }
+            } catch (err) {
+              console.error('Polling error:', err);
+            }
+          }, 30000); // Check setiap 30 detik
+          
+          // Cleanup interval on logout
+          return () => clearInterval(intervalId);
         } else {
+          
           setIsAdmin(false);
         }
         
@@ -56,7 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (session?.user) {
         checkAdminRole(session.user.id);
       }
-      
+      // console.log(session.user)
       setIsLoading(false);
     });
 
@@ -90,9 +112,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+   const {error} = await supabase.auth.signOut();
+   return {error}
   };
 
+  
   return (
     <AuthContext.Provider value={{ user, session, isAdmin, isLoading, signUp, signIn, signOut }}>
       {children}

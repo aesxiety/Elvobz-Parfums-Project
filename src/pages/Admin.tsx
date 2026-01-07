@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Calendar, 
-  Users as UsersIcon, 
-  CheckCircle2, 
-  Clock, 
-  Loader2, 
-  RefreshCw, 
+import {
+  Calendar,
+  Users as UsersIcon,
+  CheckCircle2,
+  Clock,
+  Loader2,
+  RefreshCw,
   Search,
   Shield,
   Mail,
@@ -14,7 +14,8 @@ import {
   CalendarDays,
   MoreVertical,
   Filter,
-  Check
+  Check,
+
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -34,9 +35,10 @@ import {
   DropdownMenuCheckboxItem
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase , supabaseAdmin} from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { log } from 'console';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 
 interface Reservation {
   id: string;
@@ -98,7 +100,10 @@ export default function Admin() {
   const [specificUserId, setSpecificUserId] = useState<string | null>(null);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>(['pending', 'confirmed', 'completed']);
   const [statusFilterOpen, setStatusFilterOpen] = useState(false);
-  
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<User | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -114,7 +119,7 @@ export default function Admin() {
     }
   }, [selectedStatuses]);
 
-  console.log(reservations)
+  
 
   const fetchReservations = async () => {
     try {
@@ -129,9 +134,9 @@ export default function Admin() {
       }
 
       const { data, error } = await query;
-      
+
       if (error) throw error;
-      
+
       if (data) setReservations(data);
     } catch (error: any) {
       toast({
@@ -145,7 +150,7 @@ export default function Admin() {
     }
   };
 
-  const fetchReservationsUserId = async(userId: string) => {
+  const fetchReservationsUserId = async (userId: string) => {
     try {
       let query = supabase
         .from('reservations')
@@ -157,10 +162,10 @@ export default function Admin() {
         query = query.in('status', selectedStatuses);
       }
 
-      const {data, error} = await query;
+      const { data, error } = await query;
 
       if (error) throw error;
-      
+
       if (data) setReservations(data);
     } catch (error: any) {
       toast({
@@ -204,7 +209,7 @@ export default function Admin() {
       const combinedUsers = (usersData || []).map(user => {
         const userRole = rolesData?.find(role => role.user_id === user.id);
         const totalBookings = bookingCounts[user.id] || 0;
-        
+
         return {
           id: user.id,
           email: user.email || '',
@@ -232,9 +237,9 @@ export default function Admin() {
     setIsRefreshing(true);
     setIsSpecificReservation(false);
     setSpecificUserId(null);
-    setTimeout(async() => {  
+    setTimeout(async () => {
       await fetchReservations();
-    }, 500); 
+    }, 500);
   };
 
   const handleRefreshUsers = async () => {
@@ -271,8 +276,8 @@ export default function Admin() {
   };
 
   const handleStatusFilterChange = (status: string) => {
-    setSelectedStatuses(prev => 
-      prev.includes(status) 
+    setSelectedStatuses(prev =>
+      prev.includes(status)
         ? prev.filter(s => s !== status)
         : [...prev, status]
     );
@@ -287,13 +292,13 @@ export default function Admin() {
   };
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = 
+    const matchesSearch =
       user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.full_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.phone?.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesRole = userRoleFilter === 'all' || user.role === userRoleFilter;
-    
+
     return matchesSearch && matchesRole;
   });
 
@@ -326,12 +331,59 @@ export default function Admin() {
       .slice(0, 2);
   };
 
+  const openDeleteDialog = (user: User) => {
+    setUserToDelete(user);
+    setDeleteDialogOpen(true);
+    console.log(user)
+  };
+  const handleDeleteAccount = async () => {
+  if (!userToDelete) return;
+  setIsDeleting(true);
+  
+  try {
+    // 1. Get current session for JWT and current user ID
+    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    
+    if (sessionError || !session) {
+      throw new Error('You need to be logged in to perform this action');
+    }
+    
+    const { data, error } = await supabaseAdmin.functions.invoke('delete-user', {
+      body: {
+        userId: userToDelete.id,
+        currentUserId: session.user.id
+      }
+    });
+
+    if (error) throw error;
+
+    setUsers(prev => prev.filter(user => user.id !== userToDelete.id));
+    setIsSpecificReservation(false);
+    setSpecificUserId(null);
+    toast({
+      title: 'Account deleted',
+      description: 'User account has been permanently removed.',
+    });
+
+  } catch (error: any) {
+    console.error('Delete error:', error);
+    toast({
+      title: 'Failed to delete account',
+      description: error.message || 'An error occurred while deleting the account',
+      variant: 'destructive',
+    });
+  } finally {
+    setIsDeleting(false);
+    setDeleteDialogOpen(false);
+    setUserToDelete(null);
+  }
+};
   return (
     <Layout>
       <section className="pt-20 pb-8 bg-gradient-noir">
         <div className="container mx-auto px-4 lg:px-8">
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col lg:flex-row lg:items-center justify-between gap-4"
           >
@@ -401,12 +453,12 @@ export default function Admin() {
 
             <Card className="border-border">
               <CardHeader className="pb-2">
-                <CardTitle className="text-lg font-medium">Admin Users</CardTitle>
+                <CardTitle className="text-lg font-medium">Complete Reservations</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between">
-                  <div className="text-3xl font-bold">{stats.admins}</div>
-                  <Shield className="h-8 w-8 text-purple-500/50" />
+                  <div className="text-3xl font-bold">{stats.completed}</div>
+                  <Check className="h-8 w-8 text-yellow-500/50" />
                 </div>
               </CardContent>
             </Card>
@@ -426,15 +478,15 @@ export default function Admin() {
                 </TabsTrigger>
               </TabsList>
             </div>
-            
+
             <div className='p-2'>
               {activeTab === 'reservations' ? (isSpecificReservation ? (
                 <p className='text-muted-foreground'>{reservations[0]?.email} Reservation</p>
               ) : (
                 <p className='text-muted-foreground capitalize'>All Reservations</p>
-              )) : null}  
+              )) : null}
             </div>
-            
+
             {/* Reservations Tab */}
             <TabsContent value="reservations" className="space-y-6">
               {/* Status Filter */}
@@ -480,17 +532,17 @@ export default function Admin() {
                           ))}
                           <DropdownMenuSeparator />
                           <div className="flex justify-between p-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={selectAllStatuses}
                               className="h-8 text-xs"
                             >
                               Select All
                             </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
+                            <Button
+                              variant="ghost"
+                              size="sm"
                               onClick={clearAllStatuses}
                               className="h-8 text-xs"
                             >
@@ -499,7 +551,7 @@ export default function Admin() {
                           </div>
                         </DropdownMenuContent>
                       </DropdownMenu>
-                      
+
                       {isSpecificReservation && (
                         <Button
                           variant="outline"
@@ -527,8 +579,8 @@ export default function Admin() {
                       selectedStatuses.map(status => {
                         const option = statusOptions.find(opt => opt.value === status);
                         return (
-                          <Badge 
-                            key={status} 
+                          <Badge
+                            key={status}
                             className={`${option?.color} border-0 flex items-center gap-1`}
                           >
                             {option?.label}
@@ -554,7 +606,7 @@ export default function Admin() {
                       <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                       <h3 className="text-lg font-medium mb-2">No reservations found</h3>
                       <p className="text-muted-foreground">
-                        {selectedStatuses.length === 0 
+                        {selectedStatuses.length === 0
                           ? "Please select at least one status to view reservations."
                           : "No reservations match the selected status filter."}
                       </p>
@@ -582,7 +634,7 @@ export default function Admin() {
                             <Badge className={`${statusColors[reservation.status as keyof typeof statusColors]} border-0`}>
                               {reservation.status}
                             </Badge>
-                            <Select 
+                            <Select
                               value={reservation.status}
                               onValueChange={(v) => updateStatus(reservation.id, v)}
                               disabled={updatingId === reservation.id}
@@ -618,21 +670,21 @@ export default function Admin() {
                             <span><strong>City:</strong> {reservation.city}</span>
                           </div>
                         </div>
-                        
+
                         {reservation.fragrance_preferences && (
                           <div className="text-sm">
                             <p className="font-medium text-muted-foreground mb-1">Fragrance Preferences:</p>
                             <p className="text-foreground">{reservation.fragrance_preferences}</p>
                           </div>
                         )}
-                        
+
                         <div>
                           <p className="font-medium text-muted-foreground mb-2">Admin Notes</p>
-                          <Textarea 
-                            placeholder="Add notes about this reservation..." 
-                            defaultValue={reservation.admin_notes || ''} 
-                            onBlur={(e) => updateAdminNotes(reservation.id, e.target.value)} 
-                            className="bg-background min-h-[80px]" 
+                          <Textarea
+                            placeholder="Add notes about this reservation..."
+                            defaultValue={reservation.admin_notes || ''}
+                            onBlur={(e) => updateAdminNotes(reservation.id, e.target.value)}
+                            className="bg-background min-h-[80px]"
                           />
                         </div>
                       </CardContent>
@@ -712,7 +764,7 @@ export default function Admin() {
                       </div>
                     ) : (
                       filteredUsers.map((user) => (
-                        <div key={user.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent/50 transition-colors">
+                        <div key={user.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent/20 transition-colors">
                           <div className="flex items-center gap-4">
                             <Avatar className="h-10 w-10">
                               <AvatarFallback className="bg-primary/10 text-primary">
@@ -739,51 +791,97 @@ export default function Admin() {
                                 )}
                               </div>
                               <div className="flex items-center gap-4 mt-1 text-xs text-muted-foreground">
-                                {user.role === 'user' &&(
+                                {user.role === 'user' && (
                                   <span>Bookings: {user.total_bookings}</span>
-                                  )
+                                )
                                 }
                                 <span>Joined: {new Date(user.created_at).toLocaleDateString()}</span>
                               </div>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>View Details</DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => {
-                                  setActiveTab('reservations');
-                                  setSpecificUserId(user.id);
-                                  setIsSpecificReservation(true);
-                                  fetchReservationsUserId(user.id);
-                                }}>
-                                  View Bookings
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>Send Email</DropdownMenuItem>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem className="text-destructive">
-                                  Deactivate Account
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                            {user.role !== 'admin' ? (
+
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" size="sm">
+                                    <MoreVertical className="h-4 w-4" />
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end">
+                                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem>View Details</DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => {
+                                    setActiveTab('reservations');
+                                    setSpecificUserId(user.id);
+                                    setIsSpecificReservation(true);
+                                    fetchReservationsUserId(user.id);
+                                  }}>
+                                    View Bookings
+                                  </DropdownMenuItem>
+                                  {/* <DropdownMenuItem>Send Email</DropdownMenuItem> */}
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem
+                                    className="text-destructive focus:text-destructive"
+                                    onClick={() => openDeleteDialog(user)}
+                                  >
+                                    Delete Account
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            ) : ''}
                           </div>
                         </div>
                       ))
                     )}
                   </div>
+
                 </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
         </div>
       </section>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete User Account</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the user account
+              and all associated data including their booking history.
+            </AlertDialogDescription>
+            <div className='text-muted-foreground text-sm'>
+                <p>This will delete: </p>
+              <ul className='list-disc mx-4'>
+                <li>User Account</li>
+                <li>All bookings ({userToDelete?.total_bookings} total)</li>
+                <li>User profile data</li>
+              </ul>
+                <p>This action cannot be undone.</p>
+            </div>
+          </AlertDialogHeader>
+          
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAccount}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Deleting...
+                </>
+              ) : (
+                'Delete Account'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Layout>
   );
 }

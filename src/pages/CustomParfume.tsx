@@ -19,6 +19,7 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { format, getDay } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { WHATSAPP_NUMBER } from '@/lib/utils';
 
 const AVAILABLE_CITY = 'Tanah Grogot, Paser';
 
@@ -50,7 +51,6 @@ const TIME_SLOTS = {
   ]
 };
 
-// Helper function untuk mendapatkan time slots berdasarkan hari
 const getTimeSlotsForDay = (dayOfWeek: number | undefined) => {
   if (!dayOfWeek) return [];
   
@@ -66,7 +66,7 @@ const getTimeSlotsForDay = (dayOfWeek: number | undefined) => {
   }
 };
 
-// Helper function untuk mendapatkan nama hari dalam bahasa Inggris
+
 const getDayName = (dayOfWeek: number) => {
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   return days[dayOfWeek];
@@ -91,16 +91,14 @@ export default function CustomParfume() {
       form.setValue('email', user.email || '');
     }
   }, [user, form]);
-
-  // Update time slots ketika tanggal berubah
   useEffect(() => {
     if (selectedDate) {
-      const dayOfWeek = getDay(selectedDate); // 0 = Sunday, 1 = Monday, ...
+      const dayOfWeek = getDay(selectedDate); 
       const timeSlots = getTimeSlotsForDay(dayOfWeek);
       setAvailableTimeSlots(timeSlots);
       setSelectedDayName(getDayName(dayOfWeek));
       
-      // Selalu reset waktu yang dipilih ketika tanggal berubah
+     
       form.setValue('preferredTime', '');
       form.clearErrors('preferredTime');
     } else {
@@ -120,7 +118,6 @@ export default function CustomParfume() {
       return;
     }
 
-    // Validasi tambahan untuk waktu
     if (selectedDate) {
       const dayOfWeek = getDay(selectedDate);
       const validTimes = getTimeSlotsForDay(dayOfWeek);
@@ -158,12 +155,33 @@ export default function CustomParfume() {
         variant: 'destructive',
       });
     } else {
+      await sendWhatsAppNotification(data);
       toast({
         title: 'Consultation booked!',
         description: 'We will confirm your appointment via email shortly.',
       });
       navigate('/my-reservations');
     }
+  };
+  const sendWhatsAppNotification = async (data: ReservationData) => {
+    // Format pesan untuk admin
+    const message = `NEW BOOKING ALERT!
+    
+Customer: ${data.fullName}
+Email: ${data.email}
+Phone: ${data.phone}
+Date: ${data.preferredDate}
+Time: ${data.preferredTime}
+Location: Tanah Grogot, Paser
+
+${data.fragrancePreferences ? `🌺 Preferences: ${data.fragrancePreferences}\n` : ''}
+${data.notes ? `📝 Notes: ${data.notes}` : ''}
+
+View in Admin: ${window.location.origin}/admin`;
+
+    const encodedMessage = encodeURIComponent(message);
+
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
   };
 
   // Handler untuk pemilihan tanggal

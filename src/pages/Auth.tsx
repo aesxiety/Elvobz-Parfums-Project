@@ -284,6 +284,9 @@ export default function Auth() {
                 onClick={() => {
                   setIsSignUp(!isSignUp)
                   setShowPassword(false);
+                  signInForm.reset();
+                  signUpForm.reset();
+
                 }}
                 className="text-primary hover:underline"
               >

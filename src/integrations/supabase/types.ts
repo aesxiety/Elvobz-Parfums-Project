@@ -197,6 +197,45 @@ export type Database = {
         }
         Relationships: []
       }
+       logout_events: {
+        Row: {
+          id: string
+          user_id: string
+          event_type: string
+          reason: string | null
+          created_at: string | null
+          acknowledged: boolean | null
+          acknowledged_at: string | null
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          event_type?: string
+          reason?: string | null
+          created_at?: string | null
+          acknowledged?: boolean | null
+          acknowledged_at?: string | null
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          event_type?: string
+          reason?: string | null
+          created_at?: string | null
+          acknowledged?: boolean | null
+          acknowledged_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "logout_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+    
     }
     Views: {
       [_ in never]: never

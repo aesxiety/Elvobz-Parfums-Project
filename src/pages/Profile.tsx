@@ -12,7 +12,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useAuth } from '@/lib/auth';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-
+import { useNavigate } from 'react-router-dom';
 // Schema untuk update profile
 const profileSchema = z.object({
     fullName: z.string().min(2, 'Full name must be at least 2 characters'),
@@ -32,13 +32,14 @@ type ProfileData = z.infer<typeof profileSchema>;
 type PasswordData = z.infer<typeof passwordSchema>;
 
 export default function Profile() {
-    const { user, signIn,  } = useAuth();
+    const { user, signIn, isLoading: authLoading  } = useAuth();
     const { toast } = useToast();
     const [isLoading, setIsLoading] = useState(false);
     const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const navigate = useNavigate()
     // console.log(user);
     const profileForm = useForm<ProfileData>({
         resolver: zodResolver(profileSchema),
@@ -50,6 +51,10 @@ export default function Profile() {
 
     // Load user data when component mounts
     useEffect(() => {
+        if (!authLoading && !user || user == null) {
+            navigate('/auth');
+            return;
+            }
         if (user) {
             const userData = {
                 fullName: user.user_metadata?.full_name || user.user_metadata?.name || '',
@@ -57,7 +62,7 @@ export default function Profile() {
             };
             profileForm.reset(userData);
         }
-    }, [user, profileForm]);
+    }, []);
 
     const handleProfileUpdate = async (data: ProfileData) => {
         if (!user) return;
