@@ -15,6 +15,7 @@ import {
   MoreVertical,
   Filter,
   Check,
+  MapPin
 
 } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
@@ -39,6 +40,8 @@ import { supabase , supabaseAdmin} from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { log } from 'console';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { useNavigate } from 'react-router-dom';
+
 
 interface Reservation {
   id: string;
@@ -103,7 +106,7 @@ export default function Admin() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
+  const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -341,7 +344,6 @@ export default function Admin() {
   setIsDeleting(true);
   
   try {
-    // 1. Get current session for JWT and current user ID
     const { data: { session }, error: sessionError } = await supabase.auth.getSession();
     
     if (sessionError || !session) {
@@ -666,10 +668,12 @@ export default function Admin() {
                             <Clock className="h-4 w-4 mr-2 text-muted-foreground" />
                             <span><strong>Time:</strong> {reservation.preferred_time}</span>
                           </div>
-                          <div>
-                            <span><strong>City:</strong> {reservation.city}</span>
+                          <div className='flex items-center'>
+                            <MapPin  className="h-4 w-4 mr-2 text-muted-foreground" />
+                            <span><strong>Location:</strong> {reservation.city}</span>
                           </div>
                         </div>
+                        <div className='flex flex-col gap-2'>
 
                         {reservation.fragrance_preferences && (
                           <div className="text-sm">
@@ -677,7 +681,14 @@ export default function Admin() {
                             <p className="text-foreground">{reservation.fragrance_preferences}</p>
                           </div>
                         )}
+                        {reservation.notes && (
+                          <div className="text-sm">
+                            <p className="font-medium text-muted-foreground mb-1">Notes:</p>
+                            <p className="text-foreground">{reservation.notes}</p>
+                          </div>
+                        )}
 
+                        </div>
                         <div>
                           <p className="font-medium text-muted-foreground mb-2">Admin Notes</p>
                           <Textarea
@@ -811,7 +822,11 @@ export default function Admin() {
                                 <DropdownMenuContent align="end">
                                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem>View Details</DropdownMenuItem>
+                                  <DropdownMenuItem
+                          onClick={() => navigate(`/admin/users/${user.id}`)}
+                        >
+                          View Details
+                        </DropdownMenuItem>
                                   <DropdownMenuItem onClick={() => {
                                     setActiveTab('reservations');
                                     setSpecificUserId(user.id);

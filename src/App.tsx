@@ -15,6 +15,7 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import DetailProfile from "./pages/DetailProfile";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
                   </ProtectedRoute>
                 } 
             />
+              <Route path="/admin/users/:userId" element={<DetailProfile />} /> 
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

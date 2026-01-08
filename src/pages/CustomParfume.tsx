@@ -20,13 +20,24 @@ import 'react-day-picker/dist/style.css';
 import { format, getDay } from 'date-fns';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { WHATSAPP_NUMBER } from '@/lib/utils';
+import { PhoneInput } from '@/components/ui/phone-input';
+
+import {  normalizePhoneNumber, validatePhoneNumber, toDisplayFormat } from '@/lib/utils';
 
 const AVAILABLE_CITY = 'Tanah Grogot, Paser';
 
 const reservationSchema = z.object({
   fullName: z.string().min(2, 'Please enter your full name').max(100),
   email: z.string().email('Please enter a valid email').max(255),
-  phone: z.string().min(10, 'Please enter a valid phone number').max(20),
+  phone: z.string()
+  .min(1, { message: 'Nomor telepon diperlukan' })
+  .max(20)
+  .refine((phone) => {
+    const normalized = normalizePhoneNumber(phone, true);
+    return validatePhoneNumber(normalized);
+  }, {
+    message: 'Format nomor telepon tidak valid. Gunakan format +62 8xx xxxx xxxx '
+  }),
   preferredDate: z.string().min(1, 'Please select a date'),
   preferredTime: z.string().min(1, 'Please select a time'),
   fragrancePreferences: z.string().max(500).optional(),
@@ -84,8 +95,10 @@ export default function CustomParfume() {
 
   const form = useForm<ReservationData>({
     resolver: zodResolver(reservationSchema),
+    
   });
   console.log(form.getValues())
+  
   useEffect(() => {
     if (user) {
       form.setValue('email', user.email || '');
@@ -237,6 +250,11 @@ View in Admin: ${window.location.origin}/admin`;
     day_hidden: 'invisible',
   };
 
+  const validatePhone = (value: string) => {
+    const normalized = normalizePhoneNumber(value);
+    const isValid = validatePhoneNumber(normalized);
+    return isValid || 'Format nomor telepon tidak valid';
+  };
   return (
     <Layout>
       {/* Hero */}
@@ -429,19 +447,17 @@ View in Admin: ${window.location.origin}/admin`;
                       )}
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+62 812 3456 7890"
-                        className="bg-background border-border"
-                        {...form.register('phone')}
-                      />
-                      {form.formState.errors.phone && (
-                        <p className="text-sm text-destructive">{form.formState.errors.phone.message}</p>
-                      )}
-                    </div>
+                   <PhoneInput
+        label="Nomor Telepon"
+        value={form.watch('phone')}
+        onChange={(value) => {
+          // Simpan dalam display format
+          form.setValue('phone', value, { shouldValidate: true });
+        }}
+        error={form.formState.errors.phone?.message}
+        required
+      />
+
                   </div>
 
                   <div className="space-y-2">
