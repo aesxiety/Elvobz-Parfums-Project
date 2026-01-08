@@ -15,6 +15,8 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ProductDetail from "./pages/ProductDetail";
+import DetailProfile from "./pages/DetailProfile";
 
 const queryClient = new QueryClient();
 
