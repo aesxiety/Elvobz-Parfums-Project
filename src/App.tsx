@@ -15,7 +15,6 @@ import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
-import DetailProfile from "./pages/DetailProfile";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +33,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/custom-parfume" element={<CustomParfume />} />
             <Route path="/my-reservations" element={<MyReservations />} />
+            <Route path="/products/:slug" element={<ProductDetail />} />
              <Route 
                 path="/admin" 
                 element={

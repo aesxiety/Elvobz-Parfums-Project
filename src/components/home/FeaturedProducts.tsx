@@ -2,41 +2,22 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import product1 from '@/assets/product-1.jpg';
-import product2 from '@/assets/product-2.jpg';
-import product3 from '@/assets/product-3.jpg';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
+import { products } from '@/data/products';
 
-const featuredProducts = [
-  {
-    id: 1,
-    name: 'Amor Fati',
-    price: 110000,
-    image: product1,
-    notes: ['Pink Pepper', 'Litchi', 'Bergamot'],
-  },
-  {
-    id: 2,
-    name: 'Evolve',
-    price: 110000,
-    image: product2,
-    notes: ['Blackberry', 'Neroli', 'Apple'],
-  },
-  {
-    id: 3,
-    name: 'Spartanz',
-    price: 110000,
-    image: product3,
-    notes: ['Bergamot', 'Blackcurrant', 'Apple'],
-  },
-];
+const featuredProducts = products.filter(p => p.is_featured);
 
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('id-ID', {
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat('id-ID', {
     style: 'currency',
     currency: 'IDR',
     minimumFractionDigits: 0,
   }).format(price);
-};
 
 export function FeaturedProducts() {
   return (
@@ -84,29 +65,56 @@ export function FeaturedProducts() {
                 {/* Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-noir via-noir/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                {/* Quick View Button */}
-                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                  <Link to={`/products/${product.id}`}>
-                    <Button className="w-full bg-primary/90 backdrop-blur text-primary-foreground hover:bg-primary">
+                {/* Button */}
+                <div className="absolute bottom-4 left-4 right-4 opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+                  <Link to={`/products/${product.slug}`}>
+                    <Button className="w-full bg-primary/90 backdrop-blur">
                       View Details
                     </Button>
                   </Link>
                 </div>
               </div>
 
-              {/* Product Info */}
-              <div className="mt-4 text-center">
-                <h3 className="font-display text-xl font-medium mb-1">{product.name}</h3>
-                <p className="text-sm text-muted-foreground mb-2">
-                  {product.notes.join(' · ')}
+              {/* Info */}
+              <div className="mt-4">
+                <h3 className="font-display text-xl font-medium mb-1 text-center">
+                  {product.name}
+                </h3>
+
+                <p className="text-center text-sm text-muted-foreground mb-2">
+                  {product.size_ml} ml · {formatPrice(product.price)}
                 </p>
-                <p className="text-primary font-medium">{formatPrice(product.price)}</p>
+
+                {/* Notes Accordion */}
+                <Accordion type="single" collapsible className="mt-3">
+                  <AccordionItem value="notes">
+                    <AccordionTrigger className="text-sm">
+                      Fragrance Notes
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <div className="space-y-2 text-sm text-muted-foreground">
+                        <p>
+                          <span className="font-medium text-foreground">Top:</span>{' '}
+                          {product.notes.top.join(', ')}
+                        </p>
+                        <p>
+                          <span className="font-medium text-foreground">Middle:</span>{' '}
+                          {product.notes.middle.join(', ')}
+                        </p>
+                        <p>
+                          <span className="font-medium text-foreground">Base:</span>{' '}
+                          {product.notes.base.join(', ')}
+                        </p>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </div>
             </motion.div>
           ))}
         </div>
 
-        {/* View All Button */}
+        {/* View All */}
         <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -114,7 +122,7 @@ export function FeaturedProducts() {
           className="text-center mt-12"
         >
           <Link to="/products">
-            <Button variant="outline" size="lg" className="border-primary/50 text-primary hover:bg-primary/10 group">
+            <Button variant="outline" size="lg" className="group">
               View All Collection
               <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Button>
