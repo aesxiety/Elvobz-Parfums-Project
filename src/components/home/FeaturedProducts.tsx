@@ -81,12 +81,12 @@ export function FeaturedProducts() {
                   {product.name}
                 </h3>
 
-                <p className="text-center text-sm text-muted-foreground mb-2">
+                {/* <p className="text-center text-sm text-muted-foreground mb-2">
                   {product.size_ml} ml · {formatPrice(product.price)}
-                </p>
+                </p> */}
 
                 {/* Notes Accordion */}
-                <Accordion type="single" collapsible className="mt-3">
+                {/* <Accordion type="single" collapsible className="mt-3">
                   <AccordionItem value="notes">
                     <AccordionTrigger className="text-sm">
                       Fragrance Notes
@@ -108,7 +108,7 @@ export function FeaturedProducts() {
                       </div>
                     </AccordionContent>
                   </AccordionItem>
-                </Accordion>
+                </Accordion> */}
               </div>
             </motion.div>
           ))}

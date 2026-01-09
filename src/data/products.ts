@@ -1,7 +1,7 @@
-import amorFatiImg from '@/assets/product-1.jpg';
-import evolveImg from '@/assets/product-2.jpg';
-import spartanzImg from '@/assets/product-3.jpg';
-import amertaImg from '@/assets/product-4.jpg';
+import amorFatiImg from '@/assets/amor-fati-1.png';
+import evolveImg from '@/assets/evolve-1.png';
+import spartanzImg from '@/assets/spartanz-1.png';
+import amertaImg from '@/assets/amerta-3.jpg';
 
 export const products = [
   {
