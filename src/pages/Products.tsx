@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ExternalLink, ShoppingBag } from 'lucide-react';
 import { Layout } from '@/components/layout/Layout';
 import { Button } from '@/components/ui/button';
-import { products as productData} from '@/data/products';
+import { products as productData } from '@/data/products';
 
 const formatPrice = (price: number) =>
   new Intl.NumberFormat('id-ID', {
@@ -86,7 +86,7 @@ export default function Products() {
                     </a>
                   </div>
 
-                  {product.marketplace_link && (
+                  {/* {product.marketplace_link && (
                     <a
                       href={product.marketplace_link}
                       target="_blank"
@@ -99,7 +99,7 @@ export default function Products() {
                         <ExternalLink className="h-3 w-3 ml-1" />
                       </Button>
                     </a>
-                  )}
+                  )} */}
                 </div>
               </div>
             </motion.div>
