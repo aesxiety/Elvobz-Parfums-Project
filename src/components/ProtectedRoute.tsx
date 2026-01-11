@@ -15,7 +15,6 @@ export default function ProtectedRoute({
 }: ProtectedRouteProps) {
   const { user, isAdmin, isLoading } = useAuth();
 
-  // Tampilkan loading sampai auth selesai
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -24,16 +23,13 @@ export default function ProtectedRoute({
     );
   }
 
-  // Jika user tidak ada, redirect ke auth
   if (!user) {
     return <Navigate to="/auth" replace />;
   }
 
-  // Jika require admin tapi bukan admin, redirect ke home
   if (requireAdmin && !isAdmin) {
     return <Navigate to="/" replace />;
   }
 
-  // Jika semua kondisi terpenuhi, render children
   return <>{children}</>;
 }

@@ -44,7 +44,11 @@ const App = () => (
                   </ProtectedRoute>
                 } 
             />
-              <Route path="/admin/users/:userId" element={<DetailProfile />} /> 
+            <Route path="/admin/users/:userId" element={
+              <ProtectedRoute>
+                <DetailProfile />
+              </ProtectedRoute>
+            } /> 
             <Route path="/profile" element={<Profile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

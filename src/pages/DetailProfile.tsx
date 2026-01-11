@@ -80,7 +80,7 @@ const statusColors = {
 const statusIcons = {
   pending: Clock,
   confirmed: CheckCircle,
-  completed: Shield,
+  completed: CheckCircle,
   cancelled: XCircle,
 };
 
